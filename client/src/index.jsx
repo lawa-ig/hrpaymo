@@ -9,11 +9,9 @@ import axios from 'axios';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-// ---------- Componenets ---------- //
+// ---------- Componenents ---------- //
 import LoggedOutHome from './components/LoggedOutHome.jsx';
 import Home from './components/Home.jsx';
-// import Login from './components/Login.jsx';
-// import SignUp from './components/SignUp.jsx';
 import Profile from './components/Profile.jsx';
 import Navbar from './components/Navbar.jsx';
 // ---------- Helper ---------- //
@@ -37,7 +35,30 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    this.client_id = '636654108787-tpfoiuolsol40okb92hejj1f3912dc7l.apps.googleusercontent.com';
+    gapi.load('auth2', () => {
+      // Retrieve the singleton for the GoogleAuth library and set up the client.
+      // Check if the user already has an active session
+      gapi.auth2.init({ client_id: this.client_id })
+        .then(googleAuth => {
+          if (googleAuth.isSignedIn.get()) {
+            let idToken = googleAuth.currentUser.get().getAuthResponse().id_token;
+              axios.post('/login', {idToken})
+                .then((userId) => {
+                  console.log('userid', userId)
+                  this.logUserIn(userId.data);
+                })
+                .catch((err) => {
+                  alert('Login failed!');
+                  console.log('login error', err);
+                })
+            }
+
+
+          })
+        });
+      // if user is not logged in
   }
 
   loadUserData(userId) {
@@ -150,13 +171,17 @@ class App extends React.Component {
   }
 
   logUserOut() {
-    this.setState({
-      isLoggedIn: false,
-      globalFeed: {},
-      userFeed: {},
-      balance: null,
-      userInfo: {}
-    })
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+      console.log('User signed out.');
+      this.setState({
+        isLoggedIn: false,
+        globalFeed: {},
+        userFeed: {},
+        balance: null,
+        userInfo: {}
+      })
+    });
   }
 
   render () {
@@ -166,7 +191,7 @@ class App extends React.Component {
           {!this.state.isLoggedIn 
             ? <LoggedOutHome 
                 isLoggedIn={this.state.isLoggedIn} 
-                logUserOut={this.logUserOut.bind(this)}
+                logUserIn={this.logUserIn.bind(this)}
                 {...props}
               />
             : <Home
@@ -191,7 +216,7 @@ class App extends React.Component {
           {!this.state.isLoggedIn 
             ? <LoggedOutHome 
                 isLoggedIn={this.state.isLoggedIn} 
-                logUserOut={this.logUserOut.bind(this)}
+                logUserIn={this.logUserIn.bind(this)}
                 {...routeProps}
               />
             : <Profile 
@@ -200,7 +225,7 @@ class App extends React.Component {
                 isLoggedIn={this.state.isLoggedIn} 
                 logUserOut={this.logUserOut.bind(this)}
                 userInfo={this.state.userInfo}
-                {...routeProps} 
+                {...routeProps}
               />
           }
         </div>
@@ -211,14 +236,6 @@ class App extends React.Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <BrowserRouter>
           <Switch>
-            {/* <Route 
-              exact path="/signup" 
-              render={routeProps => <SignUp {...routeProps} logUserIn={this.logUserIn.bind(this)} />} 
-            /> */}
-            <Route 
-              exact path="/login" 
-              render={routeProps => <Login {...routeProps} logUserIn={this.logUserIn.bind(this)} />} 
-            />
             <Route 
               path="/:username"
               onEnter={ this.requireAuth }
