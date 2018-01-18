@@ -26,10 +26,11 @@ const Home = (props) => {
         </div>
         <div className="home-rightColumn">
           <MiniProfile />
-          {/* <ContactsList 
-            friends={props.friends}
-            uiAvatar={props.userInfo.avatarUrl || '/images/no-image.gif'}
-          /> */}
+          <ContactsList
+            friends={this.props.friends}
+            uiAvatar={this.props.userInfo.avatarUrl || '/images/no-image.gif'}
+            loggedInUsername={this.props.userInfo.username}
+          />
         </div>
       </div>
     </div>
