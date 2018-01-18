@@ -1,14 +1,20 @@
 import React from 'react';
+
+// ---------- Sub Components ---------- //
+import ChatMessagesList from './ChatMessagesList.jsx';
+import ChatBox from './ChatBox.jsx';
+
+// ---------- Material UI ---------- //
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import ChatMessagesList from './ChatMessagesList.jsx';
-import ChatBox from './ChatBox.jsx';
 import { List, ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+
+import { Link } from 'react-router-dom';
 
 export default class ChatWindow extends React.Component {
     constructor(props){
@@ -18,6 +24,7 @@ export default class ChatWindow extends React.Component {
             messageInput: {
                 username: 'you',
                 time: 'just now',
+                to: this.props.friend.username,
                 text: ''
             },
             chats: [
@@ -31,6 +38,9 @@ export default class ChatWindow extends React.Component {
         this.handleEnterKeyPress = this.handleEnterKeyPress.bind(this);
     }
 
+    componentDidMount(){
+        this.receiveMessages();
+    }
 
     scrollToBottom() {
         setTimeout(() => {
@@ -40,12 +50,16 @@ export default class ChatWindow extends React.Component {
     }
 
       handleOpen() {
-        this.setState({open: true});   
+        this.setState({
+            open: true
+        });   
         this.scrollToBottom();
       };
     
       handleClose() {
-        this.setState({open: false});
+        this.setState({
+            open: false,
+        });
       };
 
     handleInputChanges(event) {
@@ -54,20 +68,51 @@ export default class ChatWindow extends React.Component {
         this.setState({ messageInput });
     }
 
+    appendChat(messageInput) {
+        const { chats } = this.state;
+        this.setState({
+            chats: [...chats, messageInput],
+            messageInput: {
+                username: 'you',
+                time: 'just now',
+                text: ''
+            },
+        });
+        this.scrollToBottom();
+    }
+
+    receiveChat(messageInput) {
+        const { chats } = this.state;
+        this.setState({
+            chats: [...chats, messageInput]
+        });
+        this.scrollToBottom();
+    }
+
+    sendMsg(msgInput) {
+        this.props.socket.emit("private", 
+            { msg: msgInput, to: this.props.friend.username, from: this.props.loggedInUserName}
+        );
+    }
+
     handleEnterKeyPress(event) {
         if (event.key == 'Enter') {
-            const { chats, messageInput } = this.state;
-            this.setState({ 
-                chats: [ ...chats, messageInput],
-                messageInput: {
-                    username: 'you',
-                    time: 'just now',
-                    text: ''
-                }
-            });
-            this.scrollToBottom();
+            const { messageInput } = this.state;
+            this.appendChat(messageInput);
+            this.sendMsg(messageInput);
         }
 
+    }
+
+    receiveMessages() {
+        this.props.socket.on('private', (data) => {
+            var message = {
+                user: data.from, 
+                text: data.msg, 
+                time: 'just now'
+            }
+            this.receiveChat(message);
+        })
     }
 
     render(){
@@ -97,10 +142,20 @@ export default class ChatWindow extends React.Component {
             'min-height': '50%'
         };
 
-        return (
-            
+        let onlineStyles = {
+            boxShadow: '0 0 8px green'
+        };
+
+        let inactiveStyles = {
+            opacity: '.6'
+        };
+
+        return (            
             <div className='chat-box-window'>
                 <ListItem
+                    style={this.props.online ? onlineStyles : inactiveStyles}
+                    leftIcon={<CommunicationChatBubble /> }
+                    disabled={!this.props.online}
                     primaryText={friendName}
                     leftAvatar={<Avatar src={this.props.friend.avatar_url} />}
                     rightIcon={<CommunicationChatBubble />}

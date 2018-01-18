@@ -57,6 +57,7 @@ class Home extends React.Component {
             <ContactsList 
               friends={this.props.friends}
               uiAvatar={this.props.userInfo.avatarUrl || '/images/no-image.gif'}
+              loggedInUsername={this.props.userInfo.username}
             />
           </div>
         </div>
