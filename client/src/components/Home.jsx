@@ -14,7 +14,12 @@ const Home = (props) => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar
+        socket={props.socket}
+        isLoggedIn={props.isLoggedIn}
+        logUserOut={props.logUserOut}
+        newMessages={props.messages}
+      />
       <div className="home">
         <div className="home-leftColumn pay-feed-container">
           <Payment 
@@ -27,9 +32,14 @@ const Home = (props) => {
         <div className="home-rightColumn">
           <MiniProfile />
           <ContactsList
-            friends={this.props.friends}
-            uiAvatar={this.props.userInfo.avatarUrl || '/images/no-image.gif'}
-            loggedInUsername={this.props.userInfo.username}
+            newMessage={props.newMessage}
+            newMessages={props.messages}
+            newNotification={props.newNotification}
+            clearMessagesForUser={props.clearMessagesForUser}
+            friends={props.friends}
+            uiAvatar={props.userInfo.avatarUrl || '/images/no-image.gif'}
+            loggedInUsername={props.userInfo.username}
+            socket={props.socket}
           />
         </div>
       </div>

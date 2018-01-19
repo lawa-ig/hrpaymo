@@ -41,11 +41,8 @@
     "react-material-ui-form-validator": "^1.0.5",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
-<<<<<<< HEAD
     "redux": "^3.7.2",
-=======
     "socket.io": "^2.0.4",
->>>>>>> chat and online users work
     "underscore": "^1.8.3",
     "webpack": "^2.2.1"
   },

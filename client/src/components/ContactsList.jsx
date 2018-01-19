@@ -15,26 +15,20 @@ class ContactsList extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            socket: io(),
             friendsOnline: []
         }
     }
 
-    componentDidMount() {
-        
-    }
-
     componentWillReceiveProps() {
-        this.state.socket.emit("init",
+        this.props.socket.emit("init",
             {loggedInUser: this.props.loggedInUsername}
         );
         this.checkIfFriendsOnline();
     }
 
     checkIfFriendsOnline() {
-        this.state.socket.on('friendsOnline', (friendNames) => {
+        this.props.socket.on('friendsOnline', (friendNames) => {
             if (this.state.friendsOnline !== friendNames) {
-                console.log('friends online are', friendNames);
                 this.setState({ friendsOnline: friendNames })
             }
         })
@@ -54,9 +48,12 @@ class ContactsList extends React.Component {
                                 key={i} 
                                 friend={friend} 
                                 uiAvatar={this.props.uiAvatar}
-                                socket={this.state.socket}
+                                socket={this.props.socket}
                                 loggedInUserName={this.props.loggedInUsername}
                                 online={friendOnline}
+                                newMessage={this.props.newMessage}
+                                newMessages={this.props.newMessages.filter(message => message.user === friend.username)}
+                                clearMessagesForUser={this.props.clearMessagesForUser}
                             />;
                     })
                 }

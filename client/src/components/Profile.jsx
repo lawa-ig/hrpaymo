@@ -96,6 +96,7 @@ class Profile extends React.Component {
   }
 
   render() {
+
     let orderedFeeds = [
       {
         displayLabel: `${this.props.profileInfo.firstName}'s Feed`,
@@ -116,15 +117,27 @@ class Profile extends React.Component {
       orderedFeeds = orderedFeeds.slice(0, 1);
       orderedFeeds[0].displayLabel = 'Your Feed';
     }
-    
+
     return (
       <div>
-        <Navbar />
+        <Navbar 
+          isLoggedIn={this.props.isLoggedIn} 
+          logUserOut={this.props.logUserOut} 
+          socket={this.props.socket}
+          newMessages={this.props.messages}
+          />
         <div className='body-container'>
           {this.props.unknownUser 
             ? <div>User does not exist</div>
             : <div className='pay-feed-container'>
-                <ProfileHeader />
+              <ProfileHeader
+                loggedInUser={this.props.loggedInUser}
+                loggedInUserId={this.props.loggedInUserId}
+                profileInfo={this.state.profileInfo}
+                isFriend={this.props.friends.map(friend => friend.username).includes(this.state.profileInfo.username)}
+                toggleFriend={this.props.toggleFriend}
+                socket={this.props.socket}
+              />
                 {this.props.userInfo.username !== this.props.match.params.username
                   ? <Payment />
                   : null

@@ -2,6 +2,8 @@ import React from 'react';
 import { withRouter, Link } from "react-router-dom";
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
+import NotificationBadge from './NotificationBadge.jsx';
+import MessagesBadge from './MessagesBadge.jsx';
 
 import { connect } from 'react-redux';
 import { actionLogOut } from './Reducers/Actions.js';
@@ -38,14 +40,25 @@ class Navbar extends React.Component {
       iconStyleLeft={style.left}
       iconElementRight={
         <div>
-          {this.props.isLoggedIn &&
-            <FlatButton 
+          {
+            this.props.isLoggedIn &&
+            <div>
+            <NotificationBadge
+              className="notification-badge"
+            />
+
+            <MessagesBadge
+              newMessages={this.props.newMessages}
+            />
+
+            <FlatButton
               style={style.log_out}
               hoverColor='#03A9F4'
-              className='navbar-logout' 
-              onClick={e => {this.logUserOut()}} 
-              label="Log Out" 
+              className='navbar-logout'
+              onClick={this.logOutAndRedirect.bind(this)}
+              label="Log Out"
             />
+            </div>
           }
         </div>
       }
