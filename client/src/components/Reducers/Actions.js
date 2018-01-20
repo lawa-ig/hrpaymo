@@ -13,7 +13,10 @@ export const NO_PAY_USER = 'NO_PAY_USER';
 export const HANDLE_PAYMENT_INPUTS = 'HANDLE_PAYMENT_INPUTS';
 export const LOAD_PROFILE_DATA = 'LOAD_PROFILE_DATA';
 export const UNKNOWN_USER = 'UNKNOWN_USER';
-export const PROFILE_LOAD_MORE_FEED = 'PROFILE_LOAD_MORE_FEED'
+export const PROFILE_LOAD_MORE_FEED = 'PROFILE_LOAD_MORE_FEED';
+export const CHANGE_VALUE = 'CHANGE_VALUE';
+export const FETCH_SUGGESTIONS = 'FETCH_SUGGESTIONS';
+export const CHANGE_COMMENT = 'CHANGE_COMMENT';
 
 
 // /*
@@ -115,7 +118,15 @@ export function handlePaymentInputs(obj) {
 
 export function actionUnknownUser() {
 		return {
-			type: UNKNOWN_USER,
+			type: UNKNOWN_USER
 		}
 }
+
+export function changeComment(request) {
+	return {
+		type: CHANGE_COMMENT,
+		payload: request
+	}
+}
+
 

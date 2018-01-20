@@ -6,8 +6,56 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
 
+
 import { connect } from 'react-redux';
-import { changeUsernames, changePayeeUsername, payUser, noPayUser, handlePaymentInputs } from './Reducers/Actions.js';
+import { changeUsernames, changePayeeUsername, payUser, noPayUser, handlePaymentInputs, changeComment } from './Reducers/Actions.js';
+
+
+const suggestions = ['dog', 'thank you', 'eat', 'hello', 'hot cocoa', 'coffee', 'thanks',
+  'puppies',
+  'cowfefe',
+  'yolo',
+  'kitten mitten',
+  'get schwifty',
+  'cake',
+  'hi',
+  'for',
+  'pay',
+  'tacos',
+  'burritos',
+  'for tacos',
+  'for burritos',
+  'financial assistance',
+  'bus',
+  'Paris',
+  'concert',
+  'Burning Man',
+  'beer',
+  'rent',
+  'phone bill',
+  'gossip girl',
+  'tasting in Napa',
+  'airbnb',
+  'fun',
+  'tea',
+  'high tea',
+  'afternoon tea',
+  'haters gonna hate',
+  'location',
+  'tread lightly',
+  'zoo tickets',
+  'violin',
+  'rhinoceros',
+  'pandas',
+  'salsa lessons',
+  'dancing lessons',
+  'energy drinks',
+  'red bull gives you wings',
+  'boss man'
+];
+
+
+
 
 const style = {
   form: {
@@ -57,6 +105,11 @@ class Payment extends React.Component {
   
   }
 
+  addAComment(text) {
+    this.props.dispatch(changeComment(text));
+  }
+
+
   payUser() {
     let payment = {
       payerId: this.props.userInfo.userId,
@@ -90,6 +143,12 @@ class Payment extends React.Component {
   }
 
   render() {
+    const inputProps = {
+      placeholder: 'for',
+      value: this.props.value,
+      onChange: this.onChange
+    };
+
     return (
       <Paper className='payment-container' style={style.form}>
         <div className='payment-item-container'>         
@@ -119,12 +178,15 @@ class Payment extends React.Component {
           <br />
           </div>
           <div className="form-box payment-note">
-            <TextField
-              style={style.input}
+            <AutoComplete
+              dataSource={suggestions}
+              filter={AutoComplete.caseInsensitiveFilter}
               name='note'
+              style={style.input}
               value={this.props.note}
-              onChange = {this.handleInputChanges.bind(this)}
-              hintText="for"
+              maxSearchResults={5}
+              onUpdateInput = {this.addAComment.bind(this)}
+              // hintText="for"
               floatingLabelText="Leave a comment"
               fullWidth={true}
               multiLine={true}
@@ -153,11 +215,14 @@ function mapStateToProps(state) {
     amount: state.amount,
     userInfo: state.userInfo,
     payeeUsername: state.payeeUsername,
+    value: state.value,
+    suggestions: state.suggestions,
     changePayeeUsername,
     changeUsernames,
     payUser,
     noPayUser,
-    handlePaymentInputs
+    handlePaymentInputs,
+    changeComment
   }
 }
 

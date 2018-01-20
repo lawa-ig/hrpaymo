@@ -13,7 +13,10 @@ import { LOG_USER_OUT,
          LOAD_MORE_FEED,
          LOAD_PROFILE_DATA,
          UNKNOWN_USER,
-         PROFILE_LOAD_MORE_FEED
+         CHANGE_VALUE,
+         FETCH_SUGGESTIONS,
+         PROFILE_LOAD_MORE_FEED,
+         CHANGE_COMMENT
                 } from './Actions.js';
 
 const initialState = {
@@ -31,7 +34,9 @@ const initialState = {
     profileInfo: {},
     unknownUser: false,
     profileFeed: {},
-    relationalFeed: {}
+    relationalFeed: {},
+    value: '',
+    suggestions: []
 }
 
 function paymo(state = initialState, action) {
@@ -104,6 +109,10 @@ function paymo(state = initialState, action) {
         case UNKNOWN_USER:
             return Object.assign({}, state, {
                 unknownUser: true
+            })
+        case CHANGE_COMMENT: 
+            return Object.assign({}, state, {
+                note: action.payload
             })
         default:
             return state
