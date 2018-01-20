@@ -15,7 +15,8 @@ import { LOG_USER_OUT,
          UNKNOWN_USER,
          CHANGE_VALUE,
          FETCH_SUGGESTIONS,
-         PROFILE_LOAD_MORE_FEED
+         PROFILE_LOAD_MORE_FEED,
+         CHANGE_COMMENT
                 } from './Actions.js';
 
 const initialState = {
@@ -109,14 +110,10 @@ function paymo(state = initialState, action) {
             return Object.assign({}, state, {
                 unknownUser: true
             })
-        case CHANGE_VALUE: 
-          return Object.assign({}, state, {
-              value: action.payload
-          })
-        case FETCH_SUGGESTIONS:
-          return Object.assign({}, state, {
-              suggestions: action.payload
-          })
+        case CHANGE_COMMENT: 
+            return Object.assign({}, state, {
+                note: action.payload
+            })
         default:
             return state
     }

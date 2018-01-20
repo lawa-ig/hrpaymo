@@ -9,151 +9,54 @@ import Autosuggest from 'react-autosuggest';
 
 
 import { connect } from 'react-redux';
-import { changeUsernames, changePayeeUsername, payUser, noPayUser, handlePaymentInputs, changeValue, fetchSuggestions } from './Reducers/Actions.js';
+import { changeUsernames, changePayeeUsername, payUser, noPayUser, handlePaymentInputs, changeComment } from './Reducers/Actions.js';
 
-const commonGreetings = [
-  {
-    name: 'hello'
-  },
-  {
-    name: 'thank you'
-  },
-  {
-    name: 'coffee'
-  },
-  {
-    name: 'hot cocoa'
-  },
-  {
-    name: 'puppies'
-  },
-  {
-    name: 'thanks'
-  },
-  {
-    name: 'cowfefe'
-  },
-  {
-    name: 'yolo'
-  },
-  {
-    name: 'kitten mittens'
-  },
-  {
-    name: 'get schwifty'
-  },
-  {
-    name: 'cake'
-  },
-  {
-    name: 'hi'
-  },
-  {
-    name: 'for'
-  },
-  {
-    name: 'pay'
-  },
-  {
-    name: 'tacos',
-  },
-  {
-    name: 'burritos'
-  },
-  {
-    name: 'for tacos'
-  },
-  {
-    name: 'for burgers'
-  },
-  {
-    name: 'financial assistance'
-  },
-  {
-    name: 'Paris'
-  },
-  {
-    name: 'concert'
-  },
-  {
-    name: 'Burning Man'
-  },
-  {
-    name: 'beer'
-  },
-  {
-    name: 'rent'
-  },
-  {
-    name: 'phone bill'
-  },
-  {
-    name: 'gossip girl'
-  },
-  {
-    name: 'tasting in napa'
-  },
-  {
-    name: 'airbnb'
-  },
-  {
-    name: 'fun'
-  },
-  {
-    name: 'tea'
-  },
-  {
-    name: 'high tea'
-  },
-  {
-    name: 'haters gonna hate'
-  },
-  {
-    name: 'location'
-  },
-  {
-    name: 'tread lightly'
-  },
-  {
-    name: 'zoo tickets'
-  },
-  {
-    name: 'violin'
-  },
-  {
-    name: 'rhinoceros'
-  },
-  {
-    name: 'pandas'
-  },
-  {
-    name: 'salsa lessons'
-  },
-  {
-    name: 'dancing lessons'
-  },
-  {
-    name: 'energy drinks'
-  }
+
+const suggestions = ['dog', 'thank you', 'eat', 'hello', 'hot cocoa', 'coffee', 'thanks',
+  'puppies',
+  'cowfefe',
+  'yolo',
+  'kitten mitten',
+  'get schwifty',
+  'cake',
+  'hi',
+  'for',
+  'pay',
+  'tacos',
+  'burritos',
+  'for tacos',
+  'for burritos',
+  'financial assistance',
+  'bus',
+  'Paris',
+  'concert',
+  'Burning Man',
+  'beer',
+  'rent',
+  'phone bill',
+  'gossip girl',
+  'tasting in Napa',
+  'airbnb',
+  'fun',
+  'tea',
+  'high tea',
+  'afternoon tea',
+  'haters gonna hate',
+  'location',
+  'tread lightly',
+  'zoo tickets',
+  'violin',
+  'rhinoceros',
+  'pandas',
+  'salsa lessons',
+  'dancing lessons',
+  'energy drinks',
+  'red bull gives you wings',
+  'boss man'
 ];
 
-const getSuggestions = value => {
-  const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
-
-  return inputLength === 0 ? [] : commonGreetings.filter(lang =>
-    lang.name.toLowerCase().slice(0, inputLength) === inputValue
-  );
-};
-
-const getSuggestionValue = suggestion => suggestion.name;
 
 
-const renderSuggestion = suggestion => (
-  <div>
-    {suggestion.name}
-  </div>
-);
 
 const style = {
   form: {
@@ -175,12 +78,7 @@ const style = {
 }
 
 class Payment extends React.Component {
-  constructor() {
-    super();
-    this.onChange = this.onChange.bind(this);
-    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
-    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
-  }
+
 
   componentDidMount() {
     axios('/usernames', { params: { userId: this.props.userInfo.userId }})
@@ -208,17 +106,10 @@ class Payment extends React.Component {
   
   }
 
-  onChange(event, { newValue }) {
-    this.props.dispatch(changeValue(newValue));
-  };
+  addAComment(text) {
+    this.props.dispatch(changeComment(text));
+  }
 
-  onSuggestionsFetchRequested ({ value }) {
-    this.props.dispatch(fetchSuggestions(getSuggestions(value)));
-  };
-
-  onSuggestionsClearRequested () {
-    this.props.dispatch(fetchSuggestions([]));
-  };
 
   payUser() {
     let payment = {
@@ -227,7 +118,6 @@ class Payment extends React.Component {
       amount: this.props.amount,
       note: this.props.note
     };
-    commonGreetings.push({name: this.props.note});
     axios.post('/pay', payment)
       .then((response) => {
       this.props.dispatch(payUser());    
@@ -289,17 +179,14 @@ class Payment extends React.Component {
           <br />
           </div>
           <div className="form-box payment-note">
-            <Autosuggest
-              suggestions={this.props.suggestions}
-              inputProps={inputProps}
-              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-              getSuggestionValue={getSuggestionValue}
-              renderSuggestion={renderSuggestion}
-              style={style.input}
+            <AutoComplete
+              dataSource={suggestions}
+              filter={AutoComplete.caseInsensitiveFilter}
               name='note'
+              style={style.input}
               value={this.props.note}
-              onChange = {this.handleInputChanges.bind(this)}
+              maxSearchResults={5}
+              onUpdateInput = {this.addAComment.bind(this)}
               // hintText="for"
               floatingLabelText="Leave a comment"
               fullWidth={true}
@@ -332,12 +219,11 @@ function mapStateToProps(state) {
     value: state.value,
     suggestions: state.suggestions,
     changePayeeUsername,
-    fetchSuggestions,
     changeUsernames,
-    changeValue,
     payUser,
     noPayUser,
-    handlePaymentInputs
+    handlePaymentInputs,
+    changeComment
   }
 }
 

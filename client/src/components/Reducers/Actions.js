@@ -16,6 +16,7 @@ export const UNKNOWN_USER = 'UNKNOWN_USER';
 export const PROFILE_LOAD_MORE_FEED = 'PROFILE_LOAD_MORE_FEED';
 export const CHANGE_VALUE = 'CHANGE_VALUE';
 export const FETCH_SUGGESTIONS = 'FETCH_SUGGESTIONS';
+export const CHANGE_COMMENT = 'CHANGE_COMMENT';
 
 
 // /*
@@ -121,16 +122,11 @@ export function actionUnknownUser() {
 		}
 }
 
-export function changeValue(request) {
+export function changeComment(request) {
 	return {
-		type: CHANGE_VALUE,
+		type: CHANGE_COMMENT,
 		payload: request
 	}
 }
 
-export function fetchSuggestions(request) {
-	return {
-		type: FETCH_SUGGESTIONS,
-		payload: request
-	}
-}
+
