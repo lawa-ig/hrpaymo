@@ -19,7 +19,31 @@ const commonGreetings = [
     name: 'thank you'
   },
   {
+    name: 'coffee'
+  },
+  {
+    name: 'hot cocoa'
+  },
+  {
+    name: 'puppies'
+  },
+  {
     name: 'thanks'
+  },
+  {
+    name: 'cowfefe'
+  },
+  {
+    name: 'yolo'
+  },
+  {
+    name: 'kitten mittens'
+  },
+  {
+    name: 'get schwifty'
+  },
+  {
+    name: 'cake'
   },
   {
     name: 'hi'
@@ -49,7 +73,67 @@ const commonGreetings = [
     name: 'Paris'
   },
   {
+    name: 'concert'
+  },
+  {
+    name: 'Burning Man'
+  },
+  {
+    name: 'beer'
+  },
+  {
+    name: 'rent'
+  },
+  {
+    name: 'phone bill'
+  },
+  {
+    name: 'gossip girl'
+  },
+  {
+    name: 'tasting in napa'
+  },
+  {
+    name: 'airbnb'
+  },
+  {
     name: 'fun'
+  },
+  {
+    name: 'tea'
+  },
+  {
+    name: 'high tea'
+  },
+  {
+    name: 'haters gonna hate'
+  },
+  {
+    name: 'location'
+  },
+  {
+    name: 'tread lightly'
+  },
+  {
+    name: 'zoo tickets'
+  },
+  {
+    name: 'violin'
+  },
+  {
+    name: 'rhinoceros'
+  },
+  {
+    name: 'pandas'
+  },
+  {
+    name: 'salsa lessons'
+  },
+  {
+    name: 'dancing lessons'
+  },
+  {
+    name: 'energy drinks'
   }
 ];
 
