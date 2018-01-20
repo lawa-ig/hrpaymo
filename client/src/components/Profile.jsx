@@ -121,22 +121,13 @@ class Profile extends React.Component {
     return (
       <div>
         <Navbar 
-          isLoggedIn={this.props.isLoggedIn} 
-          logUserOut={this.props.logUserOut} 
-          socket={this.props.socket}
-          newMessages={this.props.messages}
           />
         <div className='body-container'>
           {this.props.unknownUser 
             ? <div>User does not exist</div>
             : <div className='pay-feed-container'>
               <ProfileHeader
-                loggedInUser={this.props.loggedInUser}
-                loggedInUserId={this.props.loggedInUserId}
-                profileInfo={this.state.profileInfo}
-                isFriend={this.props.friends.map(friend => friend.username).includes(this.state.profileInfo.username)}
-                toggleFriend={this.props.toggleFriend}
-                socket={this.props.socket}
+                isFriend={this.props.friends.map(friend => friend.username).includes(this.props.profileInfo.username)}
               />
                 {this.props.userInfo.username !== this.props.match.params.username
                   ? <Payment />
@@ -164,11 +155,16 @@ const mapStateToProps = state => {
     userInfo: state.userInfo,
     globalFeed: state.globalFeed,
     userFeed: state.userFeed,
+    socket: state.socket,    
+    messages: state.messages,
+    notifications: state.notifications,
+    loggedInUserId: state.loggedInUserId,
     actionLoadProfileData,
     actionUnknownUser,
     actionProfileLoadMoreFeed,
-    actionPrependFeed
-    
+    actionPrependFeed,
+    actionClearMessagesForUser
   };
 }
+
 export default connect(mapStateToProps)(Profile);

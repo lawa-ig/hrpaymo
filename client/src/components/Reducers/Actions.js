@@ -17,7 +17,11 @@ export const PROFILE_LOAD_MORE_FEED = 'PROFILE_LOAD_MORE_FEED';
 export const CHANGE_VALUE = 'CHANGE_VALUE';
 export const FETCH_SUGGESTIONS = 'FETCH_SUGGESTIONS';
 export const CHANGE_COMMENT = 'CHANGE_COMMENT';
-
+export const CLEAR_USER_MESSAGES = 'CLEAR_USER_MESSAGES';
+export const CLEAR_USER_NOTIFICATIONS = 'CLEAR_USER_NOTIFICATIONS';
+export const TOGGLE_FRIEND = 'TOGGLE_FRIEND';
+export const OPEN_SOCKET = 'OPEN_SOCKET';
+export const UPDATE_FRIENDS_ONLINE = 'UPDATE_FRIENDS_ONLINE';
 
 // /*
 //  * action creators
@@ -130,3 +134,32 @@ export function changeComment(request) {
 }
 
 
+export function actionClearMessagesForUser() {
+	return {
+		type: CLEAR_USER_MESSAGES,
+	}
+}
+
+export function actionClearNotificationsForUser() {
+	return {
+		type: CLEAR_USER_NOTIFICATIONS,
+	}
+}
+
+export function actionToggleFriend() {
+	return {
+		type: TOGGLE_FRIEND
+	}
+}
+
+export function actionOpenSocket() {
+	return {
+		type: OPEN_SOCKET
+	}
+}
+
+export function actionUpdateFriendsOnline() {
+	return {
+		type: UPDATE_FRIENDS_ONLINE
+	}
+}

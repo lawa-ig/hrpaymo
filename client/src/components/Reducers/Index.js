@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import io from 'socket.io-client';
 import { LOG_USER_OUT, 
          GET_BALANCE,
          GET_USER_INFO,
@@ -13,11 +14,21 @@ import { LOG_USER_OUT,
          LOAD_MORE_FEED,
          LOAD_PROFILE_DATA,
          UNKNOWN_USER,
+<<<<<<< HEAD
          CHANGE_VALUE,
          FETCH_SUGGESTIONS,
          PROFILE_LOAD_MORE_FEED,
          CHANGE_COMMENT
                 } from './Actions.js';
+=======
+         PROFILE_LOAD_MORE_FEED,
+         CLEAR_USER_MESSAGES,
+         CLEAR_USER_NOTIFICATIONS,
+         TOGGLE_FRIEND,
+         OPEN_SOCKET,
+         UPDATE_FRIENDS_ONLINE
+                } from './Actions';
+>>>>>>> integration in progress
 
 const initialState = {
     isLoggedIn: false,
@@ -35,8 +46,16 @@ const initialState = {
     unknownUser: false,
     profileFeed: {},
     relationalFeed: {},
+<<<<<<< HEAD
     value: '',
     suggestions: []
+=======
+    socket: null,
+    loggedInUserId: null,
+    messages: [],
+    notifications: [],
+    friendsOnline: []
+>>>>>>> integration in progress
 }
 
 function paymo(state = initialState, action) {
@@ -48,7 +67,9 @@ function paymo(state = initialState, action) {
                 globalFeed: {},
                 userFeed: {},
                 balance: null,
-                userInfo: {}
+                userInfo: {},
+                friends: [],
+                socket: null
             })
         case GET_BALANCE:
             return Object.assign({}, state, { 
@@ -61,6 +82,7 @@ function paymo(state = initialState, action) {
         case LOG_IN: 
            return Object.assign({}, state, {
                isLoggedIn: true,
+               Id: action.payload.userId,
                userInfo: action.payload
            })
         case GET_FRIENDS_LIST: 
@@ -110,9 +132,31 @@ function paymo(state = initialState, action) {
             return Object.assign({}, state, {
                 unknownUser: true
             })
+<<<<<<< HEAD
         case CHANGE_COMMENT: 
             return Object.assign({}, state, {
                 note: action.payload
+=======
+        case CLEAR_USER_MESSAGES:
+            return Object.assign({}, state, {
+                messages: action.payload.keepTheseMessages
+            })
+        case CLEAR_USER_NOTIFICATIONS: 
+            return Object.assign({}, state, {
+                notifications: []
+            })
+        // case TOGGLE_FRIEND:
+        //     return Object.assign({}, state, {
+
+        //     })
+        case OPEN_SOCKET:
+            return Object.assign({}, state, {
+                socket: io()
+            })
+        case UPDATE_FRIENDS_ONLINE:
+            return Object.assign({}, state, {
+                friendsOnline: action.payload.friendsOnline
+>>>>>>> integration in progress
             })
         default:
             return state

@@ -17,6 +17,9 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 
 import { Link } from 'react-router-dom';
 
+import { connect } from 'react-redux';
+import { actionClearMessagesForUser } from './Reducers/Actions.js'
+
 export default class ChatWindow extends React.Component {
     constructor(props){
         super(props);
@@ -50,14 +53,17 @@ export default class ChatWindow extends React.Component {
             open: true
         });   
         this.scrollToBottom();
-        this.props.clearMessagesForUser(this.props.friend.username);
+        var keepTheseMessages = this.state.messages.filter(msg => {
+            return msg.user !== user
+        })
+        this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
       };
     
       handleClose() {
         this.setState({
             open: false,
         });
-        this.props.clearMessagesForUser(this.props.friend.username);
+        this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
       };
 
     handleInputChanges(event) {
@@ -82,7 +88,6 @@ export default class ChatWindow extends React.Component {
     receiveChat(messageInput) {
         const { chats } = this.state;
         this.props.newMessage(messageInput);
-        console.log('running receive chat');
         this.setState({
             chats: [...chats, messageInput]
         });
@@ -186,3 +191,14 @@ export default class ChatWindow extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        profileInfo: state.profileInfo,
+        socket: state.socket,
+        messages: state.messages,
+        actionClearMessagesForUser
+    };
+}
+
+export default connect(mapStateToProps)(ChatWindow);

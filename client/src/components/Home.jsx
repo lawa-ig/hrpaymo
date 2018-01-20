@@ -14,12 +14,7 @@ const Home = (props) => {
 
   return (
     <div>
-      <Navbar
-        socket={props.socket}
-        isLoggedIn={props.isLoggedIn}
-        logUserOut={props.logUserOut}
-        newMessages={props.messages}
-      />
+      <Navbar/>
       <div className="home">
         <div className="home-leftColumn pay-feed-container">
           <Payment 
@@ -33,13 +28,8 @@ const Home = (props) => {
           <MiniProfile />
           <ContactsList
             newMessage={props.newMessage}
-            newMessages={props.messages}
             newNotification={props.newNotification}
-            clearMessagesForUser={props.clearMessagesForUser}
-            friends={props.friends}
             uiAvatar={props.userInfo.avatarUrl || '/images/no-image.gif'}
-            loggedInUsername={props.userInfo.username}
-            socket={props.socket}
           />
         </div>
       </div>

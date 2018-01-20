@@ -6,6 +6,7 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import IconButton from 'material-ui/IconButton';
 import moment from 'moment';
 import { connect } from 'react-redux';
+
 // import ChatWindow from './ChatWindow.jsx';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
 import ActionFace from 'material-ui/svg-icons/action/face';
@@ -41,9 +42,19 @@ class ProfileHeader extends React.Component {
       { msg: 'check' }
     );
     this.props.socket.on('friendsOnline', (friendNames) => {
-        console.log('people online are', friendNames);
         this.setState({ friendOnline: friendNames.includes(props.profileInfo.username) })
     })
+  }
+
+  toggleFriend(userId, friendId, isFriend) {
+    var method = isFriend ? 'rmFriend' : 'addFriend';
+    axios.post('/friends', { method, friendId, userId })
+      .then((response) => {
+        this.props.dispatch(getFriends(response.data));
+      })
+      .catch((error) => {
+        console.log('error in toggleFriend (index.jsx)')
+      });
   }
 
   displayIcon(){
@@ -54,7 +65,7 @@ class ProfileHeader extends React.Component {
          tooltipPosition="top-center"
          onClick={e => {
            this.setState({ clickedFriendIcon: 'rm' });
-           return this.props.toggleFriend(this.props.loggedInUserId, props.profileInfo.userId, this.props.isFriend)
+           return this.toggleFriend(this.props.loggedInUserId, props.profileInfo.userId, this.props.isFriend)
           }}         
        >
        <ActionFace />
@@ -65,7 +76,7 @@ class ProfileHeader extends React.Component {
          tooltipPosition="top-center"    
          onClick={e => {
            this.setState({clickedFriendIcon: 'add'});
-           return this.props.toggleFriend(this.props.loggedInUserId, props.profileInfo.userId, this.props.isFriend)
+           return this.toggleFriend(this.props.loggedInUserId, props.profileInfo.userId, this.props.isFriend)
           }}      
        >
        <ContentAddCircle />
@@ -120,7 +131,10 @@ class ProfileHeader extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    profileInfo: state.profileInfo
+    profileInfo: state.profileInfo,
+    loggedInUserId: state.loggedInUserId,
+    socket: state.socket,
+    getFriends
   }
 }
 

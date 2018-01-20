@@ -40,6 +40,7 @@ module.exports = {
     .orWhere({to_user: userId})
     .select('from_user', 'to_user', 'verified')
     .then((result) => {
+      console.log('in db, getting friendsList, result: ', result);
       var qS = `SELECT * FROM users WHERE `
       result.forEach((entry, index) => {
         if(entry.from_user === userId) {
@@ -54,6 +55,7 @@ module.exports = {
       })
       pg.raw(qS)
       .then((result) => {
+        console.log('got rows: ', result);
         callback(null, result.rows)
       })
     })

@@ -2,6 +2,7 @@ import React from 'react';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
+import { connect } from 'react-redux';
 
 var newNotifs = 0;
 
@@ -33,4 +34,12 @@ const NotificationBadge = () => (
     </div>
 );
 
-export default NotificationBadge;
+const mapStateToProps = state => {
+    return {
+        socket: state.socket,
+        notifications: state.notifications,
+        loggedInUserId: state.loggedInUserId,
+    };
+}
+
+export default connect(mapStateToProps)(NotificationBadge);

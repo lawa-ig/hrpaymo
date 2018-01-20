@@ -13,7 +13,8 @@ import { actionLogOut,
          actionUserInfo,
          actionPrependFeed,
          actionLoadMoreFeed,
-         getFriends
+         getFriends,
+         actionClearMessagesForUser
           } from './components/Reducers/Actions.js'
 
 
@@ -30,9 +31,6 @@ import Navbar from './components/Navbar.jsx';
 // ---------- Helper ---------- //
 import feedManipulation from './feedManipulation.js'
 
-// ---------- Web Socket ---------- //
-import io from 'socket.io-client';
-
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: '#3D95CE',
@@ -42,21 +40,6 @@ const muiTheme = getMuiTheme({
 class App extends React.Component {
   constructor(props) {
     super(props);
-<<<<<<< HEAD:client/src/App.jsx
-=======
-    this.state = { 
-      isLoggedIn: false,
-      globalFeed: {},
-      userFeed: {},
-      balance: null,
-      userInfo: {},
-      friends: [],
-      socket: io(),
-      loggedInUserId: null,
-      messages: [],
-      notifications: []
-    }
->>>>>>> chat works final:client/src/index.jsx
   }
 
   componentWillMount() {
@@ -182,17 +165,6 @@ class App extends React.Component {
       });
   }
 
-  toggleFriend(userId, friendId, isFriend) {
-    var method = isFriend ? 'rmFriend' : 'addFriend';
-    axios.post('/friends', { method, friendId, userId })
-      .then((response) => {
-        this.getFriendsList(this.state.loggedInUserId);
-      })
-      .catch((error) => {
-        console.log('error in toggleFriend (index.jsx)')
-      });
-  }
-
   //Notiifications
   newNotification(notif) {
     this.setState({
@@ -207,17 +179,10 @@ class App extends React.Component {
   }
 
   clearMessagesForUser(user) {
-    console.log('username is ', user);
-    var keepTheseMessages = this.state.messages.filter(msg => {
-      return msg.user !== user
-    })
-    this.setState({
-      messages: keepTheseMessages
-    })
+    this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
   }
 
   logUserIn(userId) {
-<<<<<<< HEAD:client/src/App.jsx
      // set the userId in the userInfo object as soon as the user logs in
      var obj = this.props.userInfo;
      obj.userId = userId;
@@ -225,30 +190,6 @@ class App extends React.Component {
      this.loadUserData(userId);
    }
 
-=======
-    // set the userId in the userInfo object as soon as the user logs in
-    var obj = this.state.userInfo;
-    obj.userId = userId;
-    this.setState({
-      isLoggedIn: true,
-      userInfo: obj,
-      loggedInUserId: userId
-    })
-    this.loadUserData(userId);
-  }
-
-  logUserOut() {
-    this.setState({
-      isLoggedIn: false,
-      globalFeed: {},
-      userFeed: {},
-      balance: null,
-      userInfo: {},
-      friends: [],
-      socket: null
-    })
-  }
->>>>>>> chat works final:client/src/index.jsx
 
   render () {
     const HomeWithProps = (props) => {
@@ -259,31 +200,11 @@ class App extends React.Component {
                 logUserIn={this.logUserIn.bind(this)}
                 {...props}
               />
-<<<<<<< HEAD:client/src/App.jsx
             : 
             <Home
               refreshUserData={this.refreshUserData.bind(this)}
               loadMoreFeed={this.loadMoreFeed.bind(this)}
               {...props}
-=======
-            : <Home
-                refreshUserData={this.refreshUserData.bind(this)}
-                isLoggedIn={this.state.isLoggedIn} 
-                logUserOut={this.logUserOut.bind(this)}
-                userFeed={this.state.userFeed} 
-                loadMoreFeed={this.loadMoreFeed.bind(this)}
-                globalFeed={this.state.globalFeed}
-                userInfo={this.state.userInfo}
-                balance={this.state.balance}
-                friends={this.state.friends}
-                socket={this.state.socket}
-                newMessage={this.newMessage.bind(this)}
-                newNotification={this.newNotification.bind(this)}
-                clearMessagesForUser={this.clearMessagesForUser.bind(this)}
-                messages={this.state.messages}
-                notifications={this.state.notifications}
-                {...props}
->>>>>>> chat works final:client/src/index.jsx
               />
           }
         </div>
@@ -302,21 +223,8 @@ class App extends React.Component {
             <Profile 
                 key={routeProps.location.pathname}
                 refreshUserData={this.refreshUserData.bind(this)}
-<<<<<<< HEAD:client/src/App.jsx
+                getFriendsList={this.getFriendsList.bind(this)}
                 {...routeProps}
-=======
-                isLoggedIn={this.state.isLoggedIn} 
-                logUserOut={this.logUserOut.bind(this)}
-                userInfo={this.state.userInfo}
-                friends={this.state.friends}
-                toggleFriend={this.toggleFriend.bind(this)}
-                loggedInUserId={this.state.loggedInUserId}
-                socket={this.state.socket}
-                clearMessagesForUser={this.clearMessagesForUser.bind(this)}
-                messages={this.state.messages}
-                notifications={this.state.notifications}
-                {...routeProps} 
->>>>>>> chat works final:client/src/index.jsx
               />
           }
         </div>
@@ -350,16 +258,21 @@ const mapStateToProps = state => {
     isLoggedIn: state.isLoggedIn,
     globalFeed: state.globalFeed,
     userFeed: state.userFeed,
+    friends: state.friends,
+    loggedInUserId: state.loggedInUserId,
+    socket: state.socket,
+    messages: state.messages,
+    notifications: state.notifications,
     actionLogOut,
     actionLogIn,
     getFriends,
     actionBalance,
     actionUserInfo,
     actionPrependFeed,
-    actionLoadMoreFeed
+    actionLoadMoreFeed,
+    actionClearMessagesForUser
   };
 }
-
 
 
 export default connect(mapStateToProps)(App);
