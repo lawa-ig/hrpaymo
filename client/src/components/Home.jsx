@@ -3,7 +3,6 @@ import Navbar from './Navbar.jsx';
 import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
-import { PText } from "react-predictive-text"
 import { connect } from 'react-redux';
 
 const Home = (props) => {

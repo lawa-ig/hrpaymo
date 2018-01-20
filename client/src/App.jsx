@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import $ from 'jquery';
 import axios from 'axios';
-import { PText } from "react-predictive-text"
 
 // ---------- React-Redux ---------- //
 import { connect } from 'react-redux';
