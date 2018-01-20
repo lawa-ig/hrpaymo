@@ -3,6 +3,7 @@ import Navbar from './Navbar.jsx';
 import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import ProfileHeader from './ProfileHeader.jsx';
+import { PText } from "react-predictive-text"
 import { connect } from 'react-redux';
 import { actionLoadProfileData,
          actionUnknownUser,

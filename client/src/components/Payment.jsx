@@ -5,9 +5,50 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
+import Autosuggest from 'react-autosuggest';
+
 
 import { connect } from 'react-redux';
-import { changeUsernames, changePayeeUsername, payUser, noPayUser, handlePaymentInputs } from './Reducers/Actions.js';
+import { changeUsernames, changePayeeUsername, payUser, noPayUser, handlePaymentInputs, changeValue, fetchSuggestions } from './Reducers/Actions.js';
+
+const commonGreetings = [
+  {
+    name: 'hello'
+  },
+  {
+    name: 'thank you'
+  },
+  {
+    name: 'thanks'
+  },
+  {
+    name: 'hi'
+  },
+  {
+    name: 'for'
+  },
+  {
+    name: 'pay'
+  }
+];
+
+const getSuggestions = value => {
+  const inputValue = value.trim().toLowerCase();
+  const inputLength = inputValue.length;
+
+  return inputLength === 0 ? [] : commonGreetings.filter(lang =>
+    lang.name.toLowerCase().slice(0, inputLength) === inputValue
+  );
+};
+
+const getSuggestionValue = suggestion => suggestion.name;
+
+
+const renderSuggestion = suggestion => (
+  <div>
+    {suggestion.name}
+  </div>
+);
 
 const style = {
   form: {
@@ -29,7 +70,12 @@ const style = {
 }
 
 class Payment extends React.Component {
-
+  constructor() {
+    super();
+    this.onChange = this.onChange.bind(this);
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
+  }
 
   componentDidMount() {
     axios('/usernames', { params: { userId: this.props.userInfo.userId }})
@@ -56,6 +102,18 @@ class Payment extends React.Component {
     this.props.dispatch(changePayeeUsername(searchText));
   
   }
+
+  onChange(event, { newValue }) {
+    this.props.dispatch(changeValue(newValue));
+  };
+
+  onSuggestionsFetchRequested ({ value }) {
+    this.props.dispatch(fetchSuggestions(getSuggestions(value)));
+  };
+
+  onSuggestionsClearRequested () {
+    this.props.dispatch(fetchSuggestions([]));
+  };
 
   payUser() {
     let payment = {
@@ -90,6 +148,12 @@ class Payment extends React.Component {
   }
 
   render() {
+    const inputProps = {
+      placeholder: 'for',
+      value: this.props.value,
+      onChange: this.onChange
+    };
+
     return (
       <Paper className='payment-container' style={style.form}>
         <div className='payment-item-container'>         
@@ -119,12 +183,18 @@ class Payment extends React.Component {
           <br />
           </div>
           <div className="form-box payment-note">
-            <TextField
+            <Autosuggest
+              suggestions={this.props.suggestions}
+              inputProps={inputProps}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+              getSuggestionValue={getSuggestionValue}
+              renderSuggestion={renderSuggestion}
               style={style.input}
               name='note'
               value={this.props.note}
               onChange = {this.handleInputChanges.bind(this)}
-              hintText="for"
+              // hintText="for"
               floatingLabelText="Leave a comment"
               fullWidth={true}
               multiLine={true}
@@ -153,8 +223,12 @@ function mapStateToProps(state) {
     amount: state.amount,
     userInfo: state.userInfo,
     payeeUsername: state.payeeUsername,
+    value: state.value,
+    suggestions: state.suggestions,
     changePayeeUsername,
+    fetchSuggestions,
     changeUsernames,
+    changeValue,
     payUser,
     noPayUser,
     handlePaymentInputs
