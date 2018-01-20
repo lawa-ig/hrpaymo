@@ -5,7 +5,6 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
-import Autosuggest from 'react-autosuggest';
 
 
 import { connect } from 'react-redux';
