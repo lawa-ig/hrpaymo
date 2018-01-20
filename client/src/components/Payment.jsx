@@ -29,6 +29,27 @@ const commonGreetings = [
   },
   {
     name: 'pay'
+  },
+  {
+    name: 'tacos',
+  },
+  {
+    name: 'burritos'
+  },
+  {
+    name: 'for tacos'
+  },
+  {
+    name: 'for burgers'
+  },
+  {
+    name: 'financial assistance'
+  },
+  {
+    name: 'Paris'
+  },
+  {
+    name: 'fun'
   }
 ];
 
@@ -122,6 +143,7 @@ class Payment extends React.Component {
       amount: this.props.amount,
       note: this.props.note
     };
+    commonGreetings.push({name: this.props.note});
     axios.post('/pay', payment)
       .then((response) => {
       this.props.dispatch(payUser());    
