@@ -14,21 +14,17 @@ import { LOG_USER_OUT,
          LOAD_MORE_FEED,
          LOAD_PROFILE_DATA,
          UNKNOWN_USER,
-<<<<<<< HEAD
          CHANGE_VALUE,
          FETCH_SUGGESTIONS,
          PROFILE_LOAD_MORE_FEED,
-         CHANGE_COMMENT
-                } from './Actions.js';
-=======
-         PROFILE_LOAD_MORE_FEED,
+         CHANGE_COMMENT,
          CLEAR_USER_MESSAGES,
          CLEAR_USER_NOTIFICATIONS,
          TOGGLE_FRIEND,
          OPEN_SOCKET,
-         UPDATE_FRIENDS_ONLINE
+         UPDATE_FRIENDS_ONLINE,
+         SET_USERNAME
                 } from './Actions';
->>>>>>> integration in progress
 
 const initialState = {
     isLoggedIn: false,
@@ -46,16 +42,14 @@ const initialState = {
     unknownUser: false,
     profileFeed: {},
     relationalFeed: {},
-<<<<<<< HEAD
     value: '',
-    suggestions: []
-=======
+    suggestions: [],
     socket: null,
     loggedInUserId: null,
     messages: [],
     notifications: [],
-    friendsOnline: []
->>>>>>> integration in progress
+    friendsOnline: [],
+    loggedInUsername: null
 }
 
 function paymo(state = initialState, action) {
@@ -83,7 +77,8 @@ function paymo(state = initialState, action) {
            return Object.assign({}, state, {
                isLoggedIn: true,
                Id: action.payload.userId,
-               userInfo: action.payload
+               userInfo: action.payload,
+               loggedInUserId: action.payload.userId
            })
         case GET_FRIENDS_LIST: 
             return Object.assign({}, state, {
@@ -132,11 +127,10 @@ function paymo(state = initialState, action) {
             return Object.assign({}, state, {
                 unknownUser: true
             })
-<<<<<<< HEAD
         case CHANGE_COMMENT: 
             return Object.assign({}, state, {
                 note: action.payload
-=======
+            })
         case CLEAR_USER_MESSAGES:
             return Object.assign({}, state, {
                 messages: action.payload.keepTheseMessages
@@ -155,8 +149,11 @@ function paymo(state = initialState, action) {
             })
         case UPDATE_FRIENDS_ONLINE:
             return Object.assign({}, state, {
-                friendsOnline: action.payload.friendsOnline
->>>>>>> integration in progress
+                friendsOnline: action.payload
+            })
+        case SET_USERNAME: 
+            return Object.assign({}, state, {
+                loggedInUsername: action.payload
             })
         default:
             return state

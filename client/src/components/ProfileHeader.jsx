@@ -6,6 +6,8 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import IconButton from 'material-ui/IconButton';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { getFriends } from './Reducers/Actions.js';
+import axios from 'axios';
 
 // import ChatWindow from './ChatWindow.jsx';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
@@ -42,7 +44,7 @@ class ProfileHeader extends React.Component {
       { msg: 'check' }
     );
     this.props.socket.on('friendsOnline', (friendNames) => {
-        this.setState({ friendOnline: friendNames.includes(props.profileInfo.username) })
+        this.setState({ friendOnline: friendNames.includes(this.props.profileInfo.username) })
     })
   }
 
@@ -53,11 +55,12 @@ class ProfileHeader extends React.Component {
         this.props.dispatch(getFriends(response.data));
       })
       .catch((error) => {
-        console.log('error in toggleFriend (index.jsx)')
+        console.log('error in toggleFriend (profileheader.jsx)')
       });
   }
 
   displayIcon(){
+    console.log('displaying icon, is friend is ', this.props.isFriend);
     return this.props.isFriend 
     ?  (<IconButton 
          className="is-friend-button"
@@ -65,7 +68,7 @@ class ProfileHeader extends React.Component {
          tooltipPosition="top-center"
          onClick={e => {
            this.setState({ clickedFriendIcon: 'rm' });
-           return this.toggleFriend(this.props.loggedInUserId, props.profileInfo.userId, this.props.isFriend)
+           return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, this.props.isFriend)
           }}         
        >
        <ActionFace />
@@ -76,7 +79,7 @@ class ProfileHeader extends React.Component {
          tooltipPosition="top-center"    
          onClick={e => {
            this.setState({clickedFriendIcon: 'add'});
-           return this.toggleFriend(this.props.loggedInUserId, props.profileInfo.userId, this.props.isFriend)
+           return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, this.props.isFriend)
           }}      
        >
        <ContentAddCircle />
@@ -91,10 +94,10 @@ class ProfileHeader extends React.Component {
           <CardHeader
             title={
               <div>
-                <span style={style.title}>{props.profileInfo.fullName}</span>
-                <span> ({props.profileInfo.username})</span>
+                <span style={style.title}>{this.props.profileInfo.fullName}</span>
+                <span> ({this.props.profileInfo.username})</span>
                 {
-                  props.loggedInUserId !== props.profileInfo.userId &&
+                  this.props.loggedInUserId !== this.props.profileInfo.userId &&
                   this.displayIcon()
                 }
                 <span style={{ paddingLeft: '50px', display: 'inlineBlock', color:'#3D95CE', fontSize: '.8rem'}}>
@@ -109,14 +112,14 @@ class ProfileHeader extends React.Component {
             }
             subtitle={
               <div className='member-tag'>
-                Member since : {moment(props.profileInfo.createdAt).format('MMMM Do YYYY')}
+                Member since : {moment(this.props.profileInfo.createdAt).format('MMMM Do YYYY')}
               </div>
             }
             avatar={
               <Avatar 
                 style={this.state.friendOnline ? { boxShadow: '0px 0px 20px 1px green'} : { visibility: 'visible' }}
                 size={100} 
-                src={props.profileInfo.avatarUrl || '/images/no-image.gif'}
+                src={this.props.profileInfo.avatarUrl || '/images/no-image.gif'}
                 tooltip="Chat"
                 tooltipPosition="top-center"  
               />

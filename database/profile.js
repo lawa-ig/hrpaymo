@@ -65,6 +65,7 @@ module.exports = {
   },
 
   addFriend: (friendId, userId, callback) => {
+    console.log('inserting friendId', friendId, 'user id', userId);
     return pg.table('friendships')
     .insert({from_user: userId, to_user: friendId, verified: false})
     .then(data => {

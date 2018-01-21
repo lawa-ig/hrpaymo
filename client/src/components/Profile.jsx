@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { actionLoadProfileData,
          actionUnknownUser,
          actionProfileLoadMoreFeed,
-         actionPrependFeed } from './Reducers/Actions.js'
+         actionPrependFeed,
+         actionClearMessagesForUser } from './Reducers/Actions.js'
 import axios from 'axios';
 import feedManipulation from '../feedManipulation.js'
 
@@ -159,6 +160,7 @@ const mapStateToProps = state => {
     messages: state.messages,
     notifications: state.notifications,
     loggedInUserId: state.loggedInUserId,
+    friends: state.friends,
     actionLoadProfileData,
     actionUnknownUser,
     actionProfileLoadMoreFeed,

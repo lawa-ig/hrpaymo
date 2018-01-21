@@ -54,7 +54,7 @@ class Navbar extends React.Component {
               style={style.log_out}
               hoverColor='#03A9F4'
               className='navbar-logout'
-              onClick={this.logOutAndRedirect.bind(this)}
+              onClick={this.logUserOut.bind(this)}
               label="Log Out"
             />
             </div>

@@ -158,7 +158,8 @@ class App extends React.Component {
   getFriendsList(userId) {
     axios('/friends', { params: { userId: userId } })
       .then((response) => {
-        this.props.dispatch(getFriends(response.data));
+        console.log('response is ', response.data);
+        this.props.dispatch(getFriends(response.data.friends));
       })
       .catch((err) => {
         console.error(err);

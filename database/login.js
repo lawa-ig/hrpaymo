@@ -3,7 +3,7 @@ const pg = require('./index.js').pg;
 module.exports = {
   loginOrCreate: (user) => {
     let username = user.email.split('@')[0];
-    let formattedUser = {id: user.sub, username: username, first_name: user.given_name, last_name: user.family_name, email: user.email, avatar_url: user.picture, amount:100};
+    let formattedUser = { id: user.sub, username: username, first_name: user.given_name, last_name: user.family_name || '', email: user.email, avatar_url: user.picture, amount:100};
     return pg.raw(
       `INSERT INTO USERS (id, username, first_name, last_name, email, avatar_url)
       VALUES (:id, :username, :first_name, :last_name, :email, :avatar_url)

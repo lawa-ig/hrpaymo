@@ -22,6 +22,8 @@ export const CLEAR_USER_NOTIFICATIONS = 'CLEAR_USER_NOTIFICATIONS';
 export const TOGGLE_FRIEND = 'TOGGLE_FRIEND';
 export const OPEN_SOCKET = 'OPEN_SOCKET';
 export const UPDATE_FRIENDS_ONLINE = 'UPDATE_FRIENDS_ONLINE';
+export const GET_FRIENDS_LIST = 'GET_FRIENDS_LIST';
+export const SET_USERNAME = 'SET_USERNAME';
 
 // /*
 //  * action creators
@@ -161,5 +163,11 @@ export function actionOpenSocket() {
 export function actionUpdateFriendsOnline() {
 	return {
 		type: UPDATE_FRIENDS_ONLINE
+	}
+}
+
+export function actionSetUsername() {
+	return {
+		type: SET_USERNAME
 	}
 }

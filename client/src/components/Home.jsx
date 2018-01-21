@@ -3,6 +3,7 @@ import Navbar from './Navbar.jsx';
 import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
+import ContactsList from './ContactsList.jsx';
 import { connect } from 'react-redux';
 
 const Home = (props) => {
@@ -40,7 +41,8 @@ const Home = (props) => {
 const mapStateToProps = state => {
   return {
     globalFeed: state.globalFeed,
-    userFeed: state.userFeed
+    userFeed: state.userFeed,
+    userInfo: state.userInfo
   }
 }
 

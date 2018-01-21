@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actionClearMessagesForUser } from './Reducers/Actions.js'
 
-export default class ChatWindow extends React.Component {
+class ChatWindow extends React.Component {
     constructor(props){
         super(props);
         this.state = {

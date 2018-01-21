@@ -85,7 +85,7 @@ app.get('/balance', (req, res) => {
 
 app.get('/friends', (req, res) => {
     var userId = req.query.userId;
-    db.profile.getFriendsList(parseInt(_.escape(userId.replace(/"/g, "'"))), (err, rows) => {
+    db.profile.getFriendsList(userId, (err, rows) => {
       if (err) {
         console.error('Error occured getting friends list', err);
         res.status(500).json(err);
