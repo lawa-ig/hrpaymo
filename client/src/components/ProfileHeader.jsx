@@ -36,7 +36,7 @@ class ProfileHeader extends React.Component {
   }
 
   componentDidMount(){
-    setTimeout(this.checkIfFriendOnline.bind(this), 300);
+    setTimeout(this.checkIfFriendOnline.bind(this), 600);
   }
 
   checkIfFriendOnline() {
@@ -48,11 +48,10 @@ class ProfileHeader extends React.Component {
     })
   }
 
-  toggleFriend(userId, friendId, isFriend) {
-    var method = isFriend ? 'rmFriend' : 'addFriend';
+  toggleFriend(userId, friendId, method) {
     axios.post('/friends', { method, friendId, userId })
       .then((response) => {
-        this.props.dispatch(getFriends(response.data));
+          this.props.getFriendsList();
       })
       .catch((error) => {
         console.log('error in toggleFriend (profileheader.jsx)')
@@ -60,30 +59,56 @@ class ProfileHeader extends React.Component {
   }
 
   displayIcon(){
-    console.log('displaying icon, is friend is ', this.props.isFriend);
-    return this.props.isFriend 
-    ?  (<IconButton 
-         className="is-friend-button"
-         tooltip="unfriend"
-         tooltipPosition="top-center"
-         onClick={e => {
-           this.setState({ clickedFriendIcon: 'rm' });
-           return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, this.props.isFriend)
-          }}         
-       >
-       <ActionFace />
-       </IconButton>)
-    : (<IconButton 
-         className="add-friend-button"
-         tooltip="add friend"
-         tooltipPosition="top-center"    
-         onClick={e => {
-           this.setState({clickedFriendIcon: 'add'});
-           return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, this.props.isFriend)
-          }}      
-       >
-       <ContentAddCircle />
-       </IconButton>)
+    if (this.state.clickedFriendIcon === 'add') {
+      return (<IconButton
+        className="is-friend-button"
+        tooltip="unfriend"
+        tooltipPosition="top-center"
+        onClick={e => {
+          this.setState({ clickedFriendIcon: 'rm' });
+          return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, 'rmFriend')
+        }}
+      >
+        <ActionFace />
+      </IconButton>);
+    } else if (this.state.clickedFriendIcon === 'rm') {
+      return (<IconButton
+        className="add-friend-button"
+        tooltip="add friend"
+        tooltipPosition="top-center"
+        onClick={e => {
+          this.setState({ clickedFriendIcon: 'add' });
+          return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, 'addFriend')
+        }}
+      >
+        <ContentAddCircle />
+      </IconButton>)
+    } else {
+      return this.props.isFriend
+        ? (<IconButton
+          className="is-friend-button"
+          tooltip="unfriend"
+          tooltipPosition="top-center"
+          onClick={e => {
+            this.setState({ clickedFriendIcon: 'rm' });
+            return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, 'rmFriend')
+          }}
+        >
+          <ActionFace />
+        </IconButton>)
+        : (<IconButton
+          className="add-friend-button"
+          tooltip="add friend"
+          tooltipPosition="top-center"
+          onClick={e => {
+            this.setState({ clickedFriendIcon: 'add' });
+            return this.toggleFriend(this.props.loggedInUserId, this.props.profileInfo.userId, 'addFriend')
+          }}
+        >
+          <ContentAddCircle />
+        </IconButton>)
+    }
+    
   }
 
   render() {
@@ -120,8 +145,6 @@ class ProfileHeader extends React.Component {
                 style={this.state.friendOnline ? { boxShadow: '0px 0px 20px 1px green'} : { visibility: 'visible' }}
                 size={100} 
                 src={this.props.profileInfo.avatarUrl || '/images/no-image.gif'}
-                tooltip="Chat"
-                tooltipPosition="top-center"  
               />
             }
             />
@@ -137,6 +160,7 @@ const mapStateToProps = state => {
     profileInfo: state.profileInfo,
     loggedInUserId: state.loggedInUserId,
     socket: state.socket,
+    friends: state.friends,
     getFriends
   }
 }

@@ -8,8 +8,10 @@ import ChatWindow from './ChatWindow.jsx';
 
 //     R E D U X        //
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { actionUpdateFriendsOnline, 
-                    actionOpenSocket } from './Reducers/Actions.js'
+         actionOpenSocket,
+         actionSetChatWindowCount} from './Reducers/Actions.js'
 
 
 // ---------- Web Socket ---------- //
@@ -23,28 +25,34 @@ class ContactsList extends React.Component {
     componentDidMount() {
         this.props.dispatch(actionOpenSocket());
         setTimeout(e => {
+            this.checkIfFriendsOnline();
+        }, 400);
+        setTimeout(e => {
             this.props.socket.emit("init",
                 { loggedInUser: this.props.userInfo.username }
             );
         }, 500);
+        setTimeout(e => {
+            this.props.dispatch(actionSetChatWindowCount(this.props.friends.length));                 
+        }, 600);
     }
 
     componentWillReceiveProps() {
-        setTimeout(e => {
-            this.checkIfFriendsOnline();
-        }, 800);
+        
     }
 
     checkIfFriendsOnline() {
         this.props.socket.on('friendsOnline', (friendNames) => {
             if (this.props.friendsOnline !== friendNames) {
-                console.log('friend names are ', friendNames);
-                this.props.dispatch(actionUpdateFriendsOnline(friendNames));
+                if (friendNames && friendNames.length) {
+                    this.props.dispatch(actionUpdateFriendsOnline( friendNames ));
+                }
             }
         })
     }
     
     render() {
+        
         return (
             <div>
                 <List>
@@ -53,7 +61,7 @@ class ContactsList extends React.Component {
                     this.props.friends && this.props.friends.length &&
                     this.props.friends
                     .map((friend, i) => {
-                        let friendOnline = this.props.friendsOnline ? this.props.friendsOnline.includes(friend.username) : false;
+                        let friendOnline = this.props.friendsOnline ? this.props.friendsOnline.includes(friend.username) : false;                   
                         return <ChatWindow
                                 key={i} 
                                 friend={friend} 
@@ -76,9 +84,16 @@ const mapStateToProps = state => {
         socket: state.socket,
         friendsOnline: state.friendsOnline,
         userInfo: state.userInfo,
+        newMessages: state.messages,
+        chatWindowCount: state.chatWindowCount,
         actionUpdateFriendsOnline,
-        actionOpenSocket
+        actionOpenSocket,
+        actionSetChatWindowCount
     }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({ actionUpdateFriendsOnline }, dispatch);
 }
 
 export default connect(mapStateToProps)(ContactsList);

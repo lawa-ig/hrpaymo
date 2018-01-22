@@ -23,7 +23,9 @@ import { LOG_USER_OUT,
          TOGGLE_FRIEND,
          OPEN_SOCKET,
          UPDATE_FRIENDS_ONLINE,
-         SET_USERNAME
+         SET_USERNAME,
+         NEW_MESSAGE,
+         CHAT_WINDOW_COUNT
                 } from './Actions';
 
 const initialState = {
@@ -49,11 +51,11 @@ const initialState = {
     messages: [],
     notifications: [],
     friendsOnline: [],
-    loggedInUsername: null
+    loggedInUsername: null,
+    chatWindowCount: 0
 }
 
 function paymo(state = initialState, action) {
-    // console.log('paymo reducer was called with state', state, 'and action', action)
     switch (action.type) {
         case LOG_USER_OUT:
             return Object.assign({}, state, {
@@ -154,6 +156,14 @@ function paymo(state = initialState, action) {
         case SET_USERNAME: 
             return Object.assign({}, state, {
                 loggedInUsername: action.payload
+            })
+        case NEW_MESSAGE:
+            return Object.assign({}, state, {
+                messages: action.payload
+            })
+        case CHAT_WINDOW_COUNT:
+            return Object.assign({}, state, {
+                chatWindowCount: action.payload
             })
         default:
             return state

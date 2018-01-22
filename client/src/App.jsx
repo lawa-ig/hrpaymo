@@ -14,7 +14,6 @@ import { actionLogOut,
          actionPrependFeed,
          actionLoadMoreFeed,
          getFriends,
-         actionClearMessagesForUser
           } from './components/Reducers/Actions.js'
 
 
@@ -158,29 +157,11 @@ class App extends React.Component {
   getFriendsList(userId) {
     axios('/friends', { params: { userId: userId } })
       .then((response) => {
-        console.log('response is ', response.data);
         this.props.dispatch(getFriends(response.data.friends));
       })
       .catch((err) => {
         console.error(err);
       });
-  }
-
-  //Notiifications
-  newNotification(notif) {
-    this.setState({
-      notifications: [...this.state.notifications, notif]
-    });
-  }
-
-  newMessage(message) {
-    this.setState({
-      messages: [...this.state.messages, message]
-    });
-  }
-
-  clearMessagesForUser(user) {
-    this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
   }
 
   logUserIn(userId) {
@@ -190,7 +171,6 @@ class App extends React.Component {
      this.props.dispatch(actionLogIn(obj));
      this.loadUserData(userId);
    }
-
 
   render () {
     const HomeWithProps = (props) => {
@@ -261,8 +241,6 @@ const mapStateToProps = state => {
     userFeed: state.userFeed,
     friends: state.friends,
     loggedInUserId: state.loggedInUserId,
-    socket: state.socket,
-    messages: state.messages,
     notifications: state.notifications,
     actionLogOut,
     actionLogIn,
@@ -271,7 +249,6 @@ const mapStateToProps = state => {
     actionUserInfo,
     actionPrependFeed,
     actionLoadMoreFeed,
-    actionClearMessagesForUser
   };
 }
 

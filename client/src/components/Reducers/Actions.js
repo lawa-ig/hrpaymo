@@ -24,6 +24,8 @@ export const OPEN_SOCKET = 'OPEN_SOCKET';
 export const UPDATE_FRIENDS_ONLINE = 'UPDATE_FRIENDS_ONLINE';
 export const GET_FRIENDS_LIST = 'GET_FRIENDS_LIST';
 export const SET_USERNAME = 'SET_USERNAME';
+export const NEW_MESSAGE = 'NEW_MESSAGE';
+export const CHAT_WINDOW_COUNT ='CHAT_WINDOW_COUNT';
 
 // /*
 //  * action creators
@@ -136,9 +138,10 @@ export function changeComment(request) {
 }
 
 
-export function actionClearMessagesForUser() {
+export function actionClearMessagesForUser(messages) {
 	return {
 		type: CLEAR_USER_MESSAGES,
+		payload: messages
 	}
 }
 
@@ -160,14 +163,29 @@ export function actionOpenSocket() {
 	}
 }
 
-export function actionUpdateFriendsOnline() {
+export function actionUpdateFriendsOnline(friendsList) {
 	return {
-		type: UPDATE_FRIENDS_ONLINE
+		type: UPDATE_FRIENDS_ONLINE,
+		payload: friendsList
 	}
 }
 
 export function actionSetUsername() {
 	return {
 		type: SET_USERNAME
+	}
+}
+
+export function actionNewMessage(msgObj) {
+	return {
+		type: NEW_MESSAGE,
+		payload: msgObj
+	}
+}
+
+export function actionSetChatWindowCount(count) {
+	return {
+		type: CHAT_WINDOW_COUNT,
+		payload: count
 	}
 }

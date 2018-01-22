@@ -21,7 +21,7 @@ class ChatBox extends React.Component {
                               key={index} 
                               id={index}
                               className="single-chat"
-                              leftAvatar={<Avatar src={ chat.user === this.props.friend.first_name ? this.props.friend.avatar_url : this.props.uiAvatar} />}
+                              leftAvatar={<Avatar src={ chat.user === this.props.friend.username ? this.props.friend.avatar_url : this.props.uiAvatar} />}
                               primaryText={chat.text}
                               secondaryText={chat.time}
                             />

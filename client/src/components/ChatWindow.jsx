@@ -17,8 +17,11 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 
 import { Link } from 'react-router-dom';
 
+// R E D U X //
 import { connect } from 'react-redux';
-import { actionClearMessagesForUser } from './Reducers/Actions.js'
+import { actionClearMessagesForUser,
+         actionNewMessage 
+                                    } from './Reducers/Actions.js'
 
 class ChatWindow extends React.Component {
     constructor(props){
@@ -43,27 +46,38 @@ class ChatWindow extends React.Component {
 
     scrollToBottom() {
         setTimeout(() => {
-            let maxIndex = this.state.chats.length - 1;
-            document.getElementById(maxIndex).scrollIntoView()
+            if (this.state.chats && this.state.chats.length) {
+                let maxIndex = this.state.chats.length - 1;
+                if (document.getElementById(maxIndex)) {
+                    document.getElementById(maxIndex).scrollIntoView()                    
+                }
+            }
         }, 0);
-    }
+    }   
 
       handleOpen() {
         this.setState({
             open: true
         });   
         this.scrollToBottom();
-        var keepTheseMessages = this.state.messages.filter(msg => {
-            return msg.user !== user
-        })
-        this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
+        if (this.props.messages) {
+            var keepTheseMessages = this.props.messages.filter(msg => {
+                return msg.user !== this.props.friend.username
+            })
+            this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
+        }
       };
     
       handleClose() {
         this.setState({
             open: false,
         });
-        this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
+          if (this.props.messages) {
+              var keepTheseMessages = this.props.messages.filter(msg => {
+                  return msg.user !== this.props.friend.username
+              })
+              this.props.dispatch(actionClearMessagesForUser(keepTheseMessages));
+          }
       };
 
     handleInputChanges(event) {
@@ -87,11 +101,16 @@ class ChatWindow extends React.Component {
 
     receiveChat(messageInput) {
         const { chats } = this.state;
-        this.props.newMessage(messageInput);
+        if (this.props.messages && this.props.messages.length) {
+            this.props.dispatch(actionNewMessage([...this.props.messages, messageInput]));            
+        } else {
+            this.props.dispatch(actionNewMessage([messageInput]));                        
+        }
         this.setState({
             chats: [...chats, messageInput]
         });
         this.scrollToBottom();
+        this.forceUpdate();
     }
 
     sendMsg(msgInput) {
@@ -142,8 +161,8 @@ class ChatWindow extends React.Component {
 
         const customContentStyle = {
             width: '50%',
-            'max-height': '50%',
-            'min-height': '50%'
+            'maxHeight': '50%',
+            'minHeight': '50%'
         };
 
         let onlineStyles = {
@@ -162,6 +181,7 @@ class ChatWindow extends React.Component {
                     primaryText={friendName}
                     leftAvatar={<Avatar src={this.props.friend.avatar_url} />}
                     rightIcon={<MessagesBadge 
+                        friendName={this.props.friend.username}
                         newMessages={this.props.newMessages}
                         online={this.props.online}
                         style={this.props.online ? { color: 'black' } : { opacity: 0 }}/>}
@@ -197,8 +217,15 @@ const mapStateToProps = state => {
         profileInfo: state.profileInfo,
         socket: state.socket,
         messages: state.messages,
-        actionClearMessagesForUser
+        loggedInUserName: state.userInfo.username,
+        actionClearMessagesForUser,
+        actionNewMessage,
     };
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({ actionNewMessage }, dispatch);
+}
+
 
 export default connect(mapStateToProps)(ChatWindow);

@@ -40,7 +40,6 @@ module.exports = {
     .orWhere({to_user: userId})
     .select('from_user', 'to_user', 'verified')
     .then((result) => {
-      console.log('in db, getting friendsList, result: ', result);
       var qS = `SELECT * FROM users WHERE `
       result.forEach((entry, index) => {
         if(entry.from_user === userId) {
@@ -55,7 +54,6 @@ module.exports = {
       })
       pg.raw(qS)
       .then((result) => {
-        console.log('got rows: ', result);
         callback(null, result.rows)
       })
     })
@@ -65,7 +63,6 @@ module.exports = {
   },
 
   addFriend: (friendId, userId, callback) => {
-    console.log('inserting friendId', friendId, 'user id', userId);
     return pg.table('friendships')
     .insert({from_user: userId, to_user: friendId, verified: false})
     .then(data => {
@@ -77,7 +74,6 @@ module.exports = {
   },
 
   rmFriend: (friendId, userId, callback) => {
-    console.log('friend id is ', friendId, 'user id is', userId);
     return pg.table('friendships')
     .where({from_user: friendId, to_user: userId})
     .orWhere({from_user: userId, to_user: friendId})    

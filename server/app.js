@@ -97,7 +97,6 @@ app.get('/friends', (req, res) => {
 
 app.post('/friends', (req, res) => {
   if (req.body.method === 'addFriend') {
-    console.log('in server, adding friend');
     db.profile.addFriend(req.body.friendId, req.body.userId, (err, data) => {
       if (err) {
         res.status(500).json(err);
@@ -106,7 +105,6 @@ app.post('/friends', (req, res) => {
       }
     });
   } else if (req.body.method === 'rmFriend') {
-    console.log('in server, removing friend');
     db.profile.rmFriend(req.body.friendId, req.body.userId, (err,data) => {
       if (err) {
         res.status(500).json(err);

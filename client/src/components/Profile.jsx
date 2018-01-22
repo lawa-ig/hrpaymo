@@ -8,13 +8,17 @@ import { actionLoadProfileData,
          actionUnknownUser,
          actionProfileLoadMoreFeed,
          actionPrependFeed,
-         actionClearMessagesForUser } from './Reducers/Actions.js'
+         actionClearMessagesForUser,
+         actionOpenSocket } from './Reducers/Actions.js'
 import axios from 'axios';
 import feedManipulation from '../feedManipulation.js'
 
 class Profile extends React.Component {
 
   componentDidMount() {
+    if (!this.props.socket) {
+      this.props.dispatch(actionOpenSocket());
+    }
     let profileUsername = this.props.match.params.username;
     let userId = this.props.userInfo.userId;
     this.loadProfileData(profileUsername);
@@ -129,6 +133,7 @@ class Profile extends React.Component {
             : <div className='pay-feed-container'>
               <ProfileHeader
                 isFriend={this.props.friends.map(friend => friend.username).includes(this.props.profileInfo.username)}
+                getFriendsList={this.props.getFriendsList}
               />
                 {this.props.userInfo.username !== this.props.match.params.username
                   ? <Payment />
@@ -165,7 +170,8 @@ const mapStateToProps = state => {
     actionUnknownUser,
     actionProfileLoadMoreFeed,
     actionPrependFeed,
-    actionClearMessagesForUser
+    actionClearMessagesForUser,
+    actionOpenSocket
   };
 }
 
