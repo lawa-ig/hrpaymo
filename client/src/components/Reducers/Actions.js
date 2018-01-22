@@ -17,7 +17,15 @@ export const PROFILE_LOAD_MORE_FEED = 'PROFILE_LOAD_MORE_FEED';
 export const CHANGE_VALUE = 'CHANGE_VALUE';
 export const FETCH_SUGGESTIONS = 'FETCH_SUGGESTIONS';
 export const CHANGE_COMMENT = 'CHANGE_COMMENT';
-
+export const CLEAR_USER_MESSAGES = 'CLEAR_USER_MESSAGES';
+export const CLEAR_USER_NOTIFICATIONS = 'CLEAR_USER_NOTIFICATIONS';
+export const TOGGLE_FRIEND = 'TOGGLE_FRIEND';
+export const OPEN_SOCKET = 'OPEN_SOCKET';
+export const UPDATE_FRIENDS_ONLINE = 'UPDATE_FRIENDS_ONLINE';
+export const GET_FRIENDS_LIST = 'GET_FRIENDS_LIST';
+export const SET_USERNAME = 'SET_USERNAME';
+export const NEW_MESSAGE = 'NEW_MESSAGE';
+export const CHAT_WINDOW_COUNT ='CHAT_WINDOW_COUNT';
 
 // /*
 //  * action creators
@@ -130,3 +138,54 @@ export function changeComment(request) {
 }
 
 
+export function actionClearMessagesForUser(messages) {
+	return {
+		type: CLEAR_USER_MESSAGES,
+		payload: messages
+	}
+}
+
+export function actionClearNotificationsForUser() {
+	return {
+		type: CLEAR_USER_NOTIFICATIONS,
+	}
+}
+
+export function actionToggleFriend() {
+	return {
+		type: TOGGLE_FRIEND
+	}
+}
+
+export function actionOpenSocket() {
+	return {
+		type: OPEN_SOCKET
+	}
+}
+
+export function actionUpdateFriendsOnline(friendsList) {
+	return {
+		type: UPDATE_FRIENDS_ONLINE,
+		payload: friendsList
+	}
+}
+
+export function actionSetUsername() {
+	return {
+		type: SET_USERNAME
+	}
+}
+
+export function actionNewMessage(msgObj) {
+	return {
+		type: NEW_MESSAGE,
+		payload: msgObj
+	}
+}
+
+export function actionSetChatWindowCount(count) {
+	return {
+		type: CHAT_WINDOW_COUNT,
+		payload: count
+	}
+}

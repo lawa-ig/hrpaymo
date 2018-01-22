@@ -42,6 +42,7 @@
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
+    "socket.io": "^2.0.4",
     "underscore": "^1.8.3",
     "webpack": "^2.2.1"
   },

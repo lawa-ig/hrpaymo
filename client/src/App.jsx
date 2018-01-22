@@ -13,7 +13,7 @@ import { actionLogOut,
          actionUserInfo,
          actionPrependFeed,
          actionLoadMoreFeed,
-         getFriends
+         getFriends,
           } from './components/Reducers/Actions.js'
 
 
@@ -157,7 +157,7 @@ class App extends React.Component {
   getFriendsList(userId) {
     axios('/friends', { params: { userId: userId } })
       .then((response) => {
-        this.props.dispatch(getFriends(response.data));
+        this.props.dispatch(getFriends(response.data.friends));
       })
       .catch((err) => {
         console.error(err);
@@ -171,7 +171,6 @@ class App extends React.Component {
      this.props.dispatch(actionLogIn(obj));
      this.loadUserData(userId);
    }
-
 
   render () {
     const HomeWithProps = (props) => {
@@ -205,6 +204,7 @@ class App extends React.Component {
             <Profile 
                 key={routeProps.location.pathname}
                 refreshUserData={this.refreshUserData.bind(this)}
+                getFriendsList={this.getFriendsList.bind(this)}
                 {...routeProps}
               />
           }
@@ -239,16 +239,18 @@ const mapStateToProps = state => {
     isLoggedIn: state.isLoggedIn,
     globalFeed: state.globalFeed,
     userFeed: state.userFeed,
+    friends: state.friends,
+    loggedInUserId: state.loggedInUserId,
+    notifications: state.notifications,
     actionLogOut,
     actionLogIn,
     getFriends,
     actionBalance,
     actionUserInfo,
     actionPrependFeed,
-    actionLoadMoreFeed
+    actionLoadMoreFeed,
   };
 }
-
 
 
 export default connect(mapStateToProps)(App);

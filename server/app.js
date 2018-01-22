@@ -84,15 +84,68 @@ app.get('/balance', (req, res) => {
 });
 
 app.get('/friends', (req, res) => {
-  var userId = req.query.userId;
-  db.profile.getFriendsList(parseInt(_.escape(userId.replace(/"/g, "'"))), (err, rows) => {
-    if (err) {
-      console.error('Error occured getting friends list', err);
-      res.status(500).json(err);
-    } else {
-      res.status(200).json({friends: rows});
+    var userId = req.query.userId;
+    db.profile.getFriendsList(userId, (err, rows) => {
+      if (err) {
+        console.error('Error occured getting friends list', err);
+        res.status(500).json(err);
+      } else {
+        res.status(200).json({ friends: rows });
+      }
+    })
+});
+
+app.post('/friends', (req, res) => {
+  if (req.body.method === 'addFriend') {
+    db.profile.addFriend(req.body.friendId, req.body.userId, (err, data) => {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        res.status(200).json('success')
+      }
+    });
+  } else if (req.body.method === 'rmFriend') {
+    db.profile.rmFriend(req.body.friendId, req.body.userId, (err,data) => {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        res.status(200).json('success')
+      }
+    });
+  }
+});
+
+app.post('/signup', (req, res) => {
+  // check to see if req fields are empty
+  if(!req.body.username ||
+    !req.body.password ||
+    !req.body.firstName ||
+    !req.body.lastName) {
+      res.status(400).json({ error: "Improper format." });
+      return;
     }
-  })
+
+  let signupData = {};
+  for(let key in req.body) {
+    signupData[_.escape(key.replace(/"/g,"'"))] = _.escape(req.body[key].replace(/"/g,"'"));
+  }
+  db.signup.newUserSignup(signupData, 100)
+    .then(userId => {
+      res.status(201).json({ userId: userId });
+    })
+    .catch(err => {
+      console.error('error on user signup:', err.message);
+      // TODO: send responses depending on what type of error is thrown
+      if(err.constraint.includes('users_user')) {
+        res.status(422).json({ error : "Username must be unique." });
+      } else if(err.constraint.includes('users_email')) {
+        res.status(422).json({ error: "Email must be unique." });
+      } else if(err.constraint.includes('users_phone')) {
+        res.status(422).json({ error: "Phone number must be unique." });
+      } else {
+        res.status(400).json({ error: "Improper format." });
+      }
+    })
 })
 
 app.post('/pay', (req, res) => {
@@ -241,4 +294,3 @@ app.get('*', (req, res) => {
 });
 
 module.exports = app;
-

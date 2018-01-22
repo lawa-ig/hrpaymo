@@ -7,13 +7,18 @@ import { connect } from 'react-redux';
 import { actionLoadProfileData,
          actionUnknownUser,
          actionProfileLoadMoreFeed,
-         actionPrependFeed } from './Reducers/Actions.js'
+         actionPrependFeed,
+         actionClearMessagesForUser,
+         actionOpenSocket } from './Reducers/Actions.js'
 import axios from 'axios';
 import feedManipulation from '../feedManipulation.js'
 
 class Profile extends React.Component {
 
   componentDidMount() {
+    if (!this.props.socket) {
+      this.props.dispatch(actionOpenSocket());
+    }
     let profileUsername = this.props.match.params.username;
     let userId = this.props.userInfo.userId;
     this.loadProfileData(profileUsername);
@@ -96,6 +101,7 @@ class Profile extends React.Component {
   }
 
   render() {
+
     let orderedFeeds = [
       {
         displayLabel: `${this.props.profileInfo.firstName}'s Feed`,
@@ -116,15 +122,19 @@ class Profile extends React.Component {
       orderedFeeds = orderedFeeds.slice(0, 1);
       orderedFeeds[0].displayLabel = 'Your Feed';
     }
-    
+
     return (
       <div>
-        <Navbar />
+        <Navbar 
+          />
         <div className='body-container'>
           {this.props.unknownUser 
             ? <div>User does not exist</div>
             : <div className='pay-feed-container'>
-                <ProfileHeader />
+              <ProfileHeader
+                isFriend={this.props.friends.map(friend => friend.username).includes(this.props.profileInfo.username)}
+                getFriendsList={this.props.getFriendsList}
+              />
                 {this.props.userInfo.username !== this.props.match.params.username
                   ? <Payment />
                   : null
@@ -151,11 +161,18 @@ const mapStateToProps = state => {
     userInfo: state.userInfo,
     globalFeed: state.globalFeed,
     userFeed: state.userFeed,
+    socket: state.socket,    
+    messages: state.messages,
+    notifications: state.notifications,
+    loggedInUserId: state.loggedInUserId,
+    friends: state.friends,
     actionLoadProfileData,
     actionUnknownUser,
     actionProfileLoadMoreFeed,
-    actionPrependFeed
-    
+    actionPrependFeed,
+    actionClearMessagesForUser,
+    actionOpenSocket
   };
 }
+
 export default connect(mapStateToProps)(Profile);

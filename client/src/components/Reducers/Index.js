@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import io from 'socket.io-client';
 import { LOG_USER_OUT, 
          GET_BALANCE,
          GET_USER_INFO,
@@ -16,8 +17,16 @@ import { LOG_USER_OUT,
          CHANGE_VALUE,
          FETCH_SUGGESTIONS,
          PROFILE_LOAD_MORE_FEED,
-         CHANGE_COMMENT
-                } from './Actions.js';
+         CHANGE_COMMENT,
+         CLEAR_USER_MESSAGES,
+         CLEAR_USER_NOTIFICATIONS,
+         TOGGLE_FRIEND,
+         OPEN_SOCKET,
+         UPDATE_FRIENDS_ONLINE,
+         SET_USERNAME,
+         NEW_MESSAGE,
+         CHAT_WINDOW_COUNT
+                } from './Actions';
 
 const initialState = {
     isLoggedIn: false,
@@ -36,11 +45,17 @@ const initialState = {
     profileFeed: {},
     relationalFeed: {},
     value: '',
-    suggestions: []
+    suggestions: [],
+    socket: null,
+    loggedInUserId: null,
+    messages: [],
+    notifications: [],
+    friendsOnline: [],
+    loggedInUsername: null,
+    chatWindowCount: 0
 }
 
 function paymo(state = initialState, action) {
-    // console.log('paymo reducer was called with state', state, 'and action', action)
     switch (action.type) {
         case LOG_USER_OUT:
             return Object.assign({}, state, {
@@ -48,7 +63,9 @@ function paymo(state = initialState, action) {
                 globalFeed: {},
                 userFeed: {},
                 balance: null,
-                userInfo: {}
+                userInfo: {},
+                friends: [],
+                socket: null
             })
         case GET_BALANCE:
             return Object.assign({}, state, { 
@@ -61,7 +78,9 @@ function paymo(state = initialState, action) {
         case LOG_IN: 
            return Object.assign({}, state, {
                isLoggedIn: true,
-               userInfo: action.payload
+               Id: action.payload.userId,
+               userInfo: action.payload,
+               loggedInUserId: action.payload.userId
            })
         case GET_FRIENDS_LIST: 
             return Object.assign({}, state, {
@@ -113,6 +132,38 @@ function paymo(state = initialState, action) {
         case CHANGE_COMMENT: 
             return Object.assign({}, state, {
                 note: action.payload
+            })
+        case CLEAR_USER_MESSAGES:
+            return Object.assign({}, state, {
+                messages: action.payload.keepTheseMessages
+            })
+        case CLEAR_USER_NOTIFICATIONS: 
+            return Object.assign({}, state, {
+                notifications: []
+            })
+        // case TOGGLE_FRIEND:
+        //     return Object.assign({}, state, {
+
+        //     })
+        case OPEN_SOCKET:
+            return Object.assign({}, state, {
+                socket: io()
+            })
+        case UPDATE_FRIENDS_ONLINE:
+            return Object.assign({}, state, {
+                friendsOnline: action.payload
+            })
+        case SET_USERNAME: 
+            return Object.assign({}, state, {
+                loggedInUsername: action.payload
+            })
+        case NEW_MESSAGE:
+            return Object.assign({}, state, {
+                messages: action.payload
+            })
+        case CHAT_WINDOW_COUNT:
+            return Object.assign({}, state, {
+                chatWindowCount: action.payload
             })
         default:
             return state

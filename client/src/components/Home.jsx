@@ -3,6 +3,7 @@ import Navbar from './Navbar.jsx';
 import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
+import ContactsList from './ContactsList.jsx';
 import { connect } from 'react-redux';
 
 const Home = (props) => {
@@ -14,7 +15,7 @@ const Home = (props) => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar/>
       <div className="home">
         <div className="home-leftColumn pay-feed-container">
           <Payment 
@@ -26,10 +27,11 @@ const Home = (props) => {
         </div>
         <div className="home-rightColumn">
           <MiniProfile />
-          {/* <ContactsList 
-            friends={props.friends}
+          <ContactsList
+            newMessage={props.newMessage}
+            newNotification={props.newNotification}
             uiAvatar={props.userInfo.avatarUrl || '/images/no-image.gif'}
-          /> */}
+          />
         </div>
       </div>
     </div>
@@ -39,7 +41,8 @@ const Home = (props) => {
 const mapStateToProps = state => {
   return {
     globalFeed: state.globalFeed,
-    userFeed: state.userFeed
+    userFeed: state.userFeed,
+    userInfo: state.userInfo
   }
 }
 
