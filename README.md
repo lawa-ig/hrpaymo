@@ -1,4 +1,4 @@
-# Project Name
+# Paywaal
 
 > Real-time Venmo clone with Google OAuth, React-Redux, Knex/PostgreSQL, Express, and Socket.io
 
