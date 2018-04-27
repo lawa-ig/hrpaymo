@@ -1,6 +1,6 @@
 # Project Name
 
-> Pithy project description
+> Real-time Venmo clone with Google OAuth, React-Redux, Knex/PostgreSQL, Express, and Socket.io
 
 ## Team
 
