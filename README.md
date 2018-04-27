@@ -4,10 +4,10 @@
 
 ## Team
 
-  - teamMember
-  - teamMember
-  - teamMember
-  - teamMember
+  - William Putnam
+  - Albert Wong
+  - Larry Chang
+  - Aaron Pietsch
 
 ## Table of Contents
 
